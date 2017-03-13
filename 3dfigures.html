@@ -1,0 +1,185 @@
+<!Doctype html>
+
+<html>
+
+<head>
+    <title>Plane figures</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=devide-width, height=device-height, initial-scale=1">
+    <style>
+        body {
+            background-color: #000000;
+            overflow: hidden;
+        }
+    </style>
+    <script src="js/three.min.js"></script>
+    <script src="js/Detector.js"></script>
+    <!--
+    <script src="js/CavasRenderer.js"></script>
+    <script src="js/Projector.js"></script>
+    -->
+</head>
+
+<body>
+    <div id="overlayingText" style="color: white; position:absolute; top:10px; left:10px;">
+        Cursor left / right : control x rotation speed<br /> Cursor up / down : control y rotation speed <br /> PageUp / PageDown : move along z axis <br /> Renderer :
+    </div>
+
+    <div id="WebGLCanvas"></div>
+
+    <script>
+        var scene, camera, renderer;
+        var xRotation = 0.05;
+        var yRotation = 0.05;
+        var xSpeed = 0.05,
+            ySpeed = 0.05;
+        var zMovement = 0.0;
+        var canvasWidth, canvasHeight;
+        var pyramidMesh, cubeMesh;
+
+        function initialiseScene() {
+            // Detect if browser supports WebGL or not
+            // If not set canvas as renderer
+            if (Detector.webgl) {
+                renderer = new THREE.WebGLRenderer({
+                    antialiasing: true
+                });
+            } else {
+                renderer = new THREE.CanvasRenderer();
+            }
+
+            //Set background-color for renderer as black with full opacity
+            renderer.setClearColor(0x000000, 1);
+            //set renderer's width and height wrt container's dimansions
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            //set renderer's size wrt content area size
+            renderer.setSize(canvasWidth, canvasHeight);
+            //append the renderer to html Canvas
+            document.getElementById('WebGLCanvas').appendChild(renderer.domElement);
+            //create a scene;
+            scene = new THREE.Scene();
+            //create a perspective camera postiotned at z = 100 and add it to scene
+            camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100);
+            camera.position.z = 10;
+            camera.lookAt(scene.position);
+            //scene.add(camera);
+            //create a pyramd
+            /*
+             * fisrt parameter : radius of top of Cylinder
+             *                    for a pyramid it should be 0
+             * second parameter : radius of bottom of cylinder
+             * third parameter : height
+             * fourth parameter : number of segments that make cylindrical shell
+             *                    for a pyramid it is 4
+             * fifth parameter : open figure then true, false for closed
+             */
+            var pyramidGeo = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false);
+            // Loop about the faces of pyramid, check if instanceof THREE.Face4
+            // or THREE.Face3 and color vertices accordingly
+            for (var i = 0; i < pyramidGeo.faces.length; i++) {
+                if (pyramidGeo.faces[i] instanceof THREE.Face4) {
+                    if (i % 2 == 0) {
+                        pyramidGeo.faces[i].vertexColors[1] = new THREE.Color(0x00FF00);
+                        pyramidGeo.faces[i].vertexColors[2] = new THREE.Color(0x0000FF);
+                    } else {
+                        pyramidGeo.faces[i].vertexColors[1] = new THREE.Color(0x0000FF);
+                        pyramidGeo.faces[i].vertexColors[2] = new THREE.Color(0x00FF00);
+                    }
+                    pyramidGeo.faces[i].vertexColors[3] = new THREE.Color(0xFF0000);
+                } else {
+                    pyramidGeo.faces[i].vertexColors[0] = new THREE.Color(0xFF0000);
+                    pyramidGeo.faces[i].vertexColors[1] = new THREE.Color(0x00FF00);
+                    pyramidGeo.faces[i].vertexColors[2] = new THREE.Color(0x0000FF);
+                }
+            }
+
+            //CREATE material to paint pyramid on
+            var pyramidMaterial = new THREE.MeshBasicMaterial({
+                vertexColors: THREE.VertexColors,
+                side: THREE.DoubleSide
+            });
+            pyramidMesh = new THREE.Mesh(pyramidGeo, pyramidMaterial);
+            pyramidMesh.position.set(-2.5, 0.0, 4.0);
+            scene.add(pyramidMesh);
+            //create a cube now
+            var cubeGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+            //for having faces of different colors
+            var boxMaterial = [
+                new THREE.MeshBasicMaterial({
+                    color: 0xFF0000
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: 0x00FF00
+                }), new THREE.MeshBasicMaterial({
+                    color: 0x0000FF
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: 0xFFFF00
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: 0x00FFFF
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: 0xFFFFFF
+                })
+            ];
+
+            var cubeMaterial = new THREE.MeshFaceMaterial(boxMaterial);
+            cubeMesh = new THREE.Mesh(cubeGeo, cubeMaterial);
+            cubeMesh.position.set(2.5, 0.0, 4.0);
+            scene.add(cubeMesh);
+
+            //Adding a listner 'keydown' and function 'onKeyDown'
+            document.addEventListener('keydown', onKeyDown, false);
+        };
+
+        function renderScene() {
+            renderer.render(scene, camera);
+        };
+
+        function animateScene() {
+            //pyramidMesh.rotation.y += 0.05;
+            //cubeMesh.rotation.x += 0.05;
+            //cubeMesh.rotateOnAxis(new THREE.Vector3(1, 1, 1).normalize(), 0.05);
+            xRotation += xSpeed;
+            yRotation += ySpeed;
+            pyramidMesh.rotation.set(-xRotation, -yRotation, 0.0);
+            cubeMesh.rotation.set(xRotation, yRotation, 0.3);
+            pyramidMesh.position.z = -zMovement;
+            cubeMesh.position.z = zMovement;
+            requestAnimationFrame(animateScene);
+            renderScene();
+        };
+        //renderScene();
+        function onKeyDown(event) {
+            var keyCode = event.which;
+            switch (keyCode) {
+                case 38:
+                    xSpeed -= 0.1;
+                    break;
+                case 40:
+                    xSpeed += 0.1;
+                    break;
+                case 37:
+                    ySpeed -= 0.01;
+                    break;
+                case 39:
+                    ySpeed += 0.01;
+                    break;
+                case 33:
+                    zMovement -= 0.1;
+                    break;
+                case 34:
+                    zMovement += 0.1;
+                    break;
+            }
+        };
+
+        //Render the scene
+        initialiseScene();
+        animateScene();
+    </script>
+</body>
+
+</html>
