@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>The moon</title>
+    <link rel="icon" type="image/ico" href="img/heart_title_icon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .moon {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            margin-top: 15%;
+            margin-left: 60%;
+            background-color: transparent;
+            border-radius: 50%;
+            box-shadow: 30px 15px 0 0 gray;
+        }
+
+        #back {
+            position: fixed;
+            padding: 0;
+            margin: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(black, #000099, #66c2ff, #ffcccc, #ffeee6);
+        }
+
+        .stars {
+            position: fixed;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: beige;
+            animation-iteration-count: infinite;
+        }
+
+        #star-1 {
+            margin-left: 60%;
+            margin-top: 15%;
+            animation-name: twinkle;
+            animation-duration: 1s;
+        }
+
+        #star-2 {
+            margin-top: 30%;
+            margin-left: 10%;
+            animation-name: twinkle;
+            animation-duration: 2s;
+        }
+
+        #star-3 {
+            margin-top: 10%;
+            margin-left: 90%;
+            animation-name: twinkle;
+            animation-duration: 3s;
+        }
+
+        #star-4 {
+            margin-top: 13%;
+            margin-left: 11%;
+            animation-name: twinkle;
+            animation-duration: 2.5s;
+        }
+
+        #star-5 {
+            margin-top: 9%;
+            margin-left: 80%;
+            animation-name: twinkle;
+            animation-duration: 2s;
+        }
+
+        @keyframes twinkle {
+            20% {
+                transform: scale(0.5);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="back"></div>
+    <div class="stars" id="star-1"></div>
+    <div class="stars" id="star-2"></div>
+    <div class="stars" id="star-3"></div>
+    <div class="stars" id="star-4"></div>
+    <div class="stars" id="star-5"></div>
+    <div class="moon"></div>
+</body>
+
+</html>
