@@ -1,17 +1,19 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>heart</title>
+        <title>A Heart</title>
+        <link rel="icon" type="image/ico" href="img/heart_title_icon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
             body {
-                background-color: rgb(119, 133, 129);
+                background-color: rgb(243, 233, 236);
                 height: 100%;
                 width: 100%;
             }
+
             .heart {
                 position: absolute;
                 margin: auto;
@@ -19,32 +21,45 @@
                 right: 0;
                 bottom: 0;
                 left: 0;
-                background-color: pink;
-                height: 50px;
-                width: 50px;
+                background-color: rgb(218, 19, 52);
+                height: 150px;
+                width: 150px;
                 transform: rotate(-45deg);
+                animation-name: beat;
+                animation-duration: 5s;
+                animation-iteration-count: infinite;
             }
 
             .heart:after {
-                background-color: pink;
+                background-color: rgb(218, 19, 52);
                 content: "";
                 border-radius: 50%;
                 position: absolute;
-                width: 50px;
-                height: 50px;
+                width: 150px;
+                height: 150px;
                 top: 0px;
-                left: 25px;
+                left: 75px;
             }
 
             .heart:before {
-                background-color: pink;
+                background-color: rgb(218, 19, 52);
                 content: "";
                 border-radius: 50%;
                 position: absolute;
-                width: 50px;
-                height: 50px;
-                top: -25px;
+                width: 150px;
+                height: 150px;
+                top: -75px;
                 left: 0px;
+            }
+
+            @keyframes beat {
+                0% {
+                    transform: scale(1) rotate(-45deg);
+                }
+
+                50% {
+                    transform: scale(0.5) rotate(-45deg);
+                }
             }
         </style>
     </head>
